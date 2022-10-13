@@ -33,4 +33,7 @@ if key == 'e':
 rospy.loginfo("Publishing command message")
 pub_joy.publish(joy_msg)
 rospy.sleep(time)
+
+joy_msg.axes = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+pub_joy.publish(joy_msg)
     

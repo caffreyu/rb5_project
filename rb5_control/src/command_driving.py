@@ -8,8 +8,8 @@ joy_msg = Joy()
 joy_msg.axes = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 joy_msg.buttons = [0, 0, 0, 0, 0, 0, 0, 0]
 
-speed_x, speed_y, speed_theta_cw, speed_theta_ccw = [1 for _ in range(4)]
-command_x, command_y, command_theta = [1 for _ in range(3)]
+speed_x, speed_y, speed_theta_cw, speed_theta_ccw = [1, 1, 1.9, 1.9]
+command_x, command_y, command_theta = [1, 1.2, 0.5]
 
 class CommandDriving:
     """Class that follows the giving waypoint command."""
@@ -33,7 +33,7 @@ class CommandDriving:
         self.current_state, self.command_state = current_state, command_state   
         self.current_x, self.current_y, self.current_theta = current_state
         self.command_x, self.command_y, self.command_theta = command_state
-        self.pub = rospy.Publisher('/cmd', Joy, queue_size = 5)
+        self.pub = rospy.Publisher('/joy', Joy, queue_size = 5)
         
         rospy.init_node("command_driving")
         self.pub.publish(joy_msg)
@@ -44,8 +44,10 @@ class CommandDriving:
         if distance != 0:
             rospy.loginfo("Moving the robot")
             delta_time = abs(distance) / speed_x
+            rospy.loginfo("Moving for " + str(delta_time))
             current_msg = deepcopy(joy_msg)
             current_msg.axes[1] = -command_x * distance / abs(distance)
+            self.pub.publish(current_msg)
             rospy.sleep(delta_time)
     
     def slide(self, distance):
@@ -53,8 +55,10 @@ class CommandDriving:
         if distance != 0:
             rospy.loginfo("Sliding the robot")
             delta_time = abs(distance) / speed_y
+            rospy.loginfo("Sliding for " + str(delta_time))
             current_msg = deepcopy(joy_msg)
             current_msg.axes[0] = -command_y * distance / abs(distance)
+            self.pub.publish(current_msg)
             rospy.sleep(delta_time)
     
     def rotate(self, angle):
@@ -63,8 +67,10 @@ class CommandDriving:
             rospy.loginfo("Rotating the robot")
             if angle < 0: delta_time = abs(angle) / speed_theta_ccw
             else: delta_time = abs(angle) / speed_theta_cw
+            rospy.loginfo("Rotating for " + str(delta_time))
             current_msg = deepcopy(joy_msg)
             current_msg.axes[2] = -command_theta * angle / abs(angle)
+            self.pub.publish(current_msg)
             rospy.sleep(delta_time)
     
     def run(self):

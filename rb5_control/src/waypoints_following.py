@@ -3,11 +3,11 @@ from command_driving import CommandDriving
 
 # processing waypoints
 
-with open('/home/hay024/ros_ws/src/rb5_project/rb5_control/src/waypoints.txt') as f:
-    waypoints_file = f.readlines()
-
-# with open('/root/ros_ws/src/rb5_project/rb5_control/src/waypoints.txt') as f:
+# with open('/home/hay024/ros_ws/src/rb5_project/rb5_control/src/waypoints.txt') as f:
 #     waypoints_file = f.readlines()
+
+with open('/root/ros_ws/src/rb5_project/rb5_control/src/waypoints.txt') as f:
+    waypoints_file = f.readlines()
 
 waypoints_string_ls = [ele[: -1].split(',') for ele in waypoints_file]
 waypoints_string_ls[-1][-1] = '0'
