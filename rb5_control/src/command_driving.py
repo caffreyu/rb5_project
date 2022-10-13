@@ -8,8 +8,8 @@ joy_msg = Joy()
 joy_msg.axes = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 joy_msg.buttons = [0, 0, 0, 0, 0, 0, 0, 0]
 
-speed_x, speed_y, speed_theta_cw, speed_theta_ccw = [1, 1, 1.9, 1.9]
-command_x, command_y, command_theta = [1, 1.2, 0.5]
+speed_x, speed_y, speed_theta_cw, speed_theta_ccw = [.45, .5225, 1.308, 1.2975]
+command_x, command_y, command_theta = [1, 1.5, 0.8]
 
 class CommandDriving:
     """Class that follows the giving waypoint command."""
@@ -44,7 +44,7 @@ class CommandDriving:
         if distance != 0:
             rospy.loginfo("Moving the robot")
             delta_time = abs(distance) / speed_x
-            rospy.loginfo("Moving for " + str(delta_time))
+            rospy.loginfo("Moving for " + str(delta_time) + " seconds")
             current_msg = deepcopy(joy_msg)
             current_msg.axes[1] = -command_x * distance / abs(distance)
             self.pub.publish(current_msg)
@@ -55,7 +55,7 @@ class CommandDriving:
         if distance != 0:
             rospy.loginfo("Sliding the robot")
             delta_time = abs(distance) / speed_y
-            rospy.loginfo("Sliding for " + str(delta_time))
+            rospy.loginfo("Sliding for " + str(delta_time) + " seconds")
             current_msg = deepcopy(joy_msg)
             current_msg.axes[0] = -command_y * distance / abs(distance)
             self.pub.publish(current_msg)
@@ -67,7 +67,7 @@ class CommandDriving:
             rospy.loginfo("Rotating the robot")
             if angle < 0: delta_time = abs(angle) / speed_theta_ccw
             else: delta_time = abs(angle) / speed_theta_cw
-            rospy.loginfo("Rotating for " + str(delta_time))
+            rospy.loginfo("Rotating for " + str(delta_time) + " seconds")
             current_msg = deepcopy(joy_msg)
             current_msg.axes[2] = -command_theta * angle / abs(angle)
             self.pub.publish(current_msg)
@@ -78,7 +78,7 @@ class CommandDriving:
         delta_x, delta_y, delta_theta = \
             [ele[0] - ele[1] 
              for ele in zip(self.command_state, self.current_state)]
-        print (delta_x, delta_y, delta_theta)
+        print (delta_x, delta_y, delta_theta) # debug
         if self.current_theta % 3.14 == 0:
             # robot facing x / -x direction
             # x directional movement will be moving
@@ -89,14 +89,18 @@ class CommandDriving:
             # robot facing y / -y direction
             # x directional movement will be sliding
             # y directional movement will be moving
-            self.move(delta_y)
-            self.move(delta_x)
+            if self.current_theta == 1.57:
+                self.move(-delta_y)
+                self.slide(-delta_x)
+            else:
+                self.move(-delta_y)
+                self.slide(delta_x)
         else:
             # rotate the robot to the desired direction first
             # then move to the command position
             current_cmd_angle = atan2(delta_y, delta_x)
             angle = current_cmd_angle - self.current_theta
-            delta_theta = current_cmd_angle - self.command_theta
+            delta_theta = self.command_theta - current_cmd_angle
             distance = sqrt(pow(delta_x, 2) + pow(delta_y, 2))
             self.rotate(angle)
             self.move(distance)

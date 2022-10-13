@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from command_driving import CommandDriving
+import rospy
+from std_msgs.msg import Int8
 
 # processing waypoints
 
@@ -21,6 +23,9 @@ for string_ls in waypoints_string_ls:
 current_state = [0.0, 0.0, 0.0]
 
 while waypoints_ls:
+    switch = rospy.wait_for_message("/switch", Int8)
+    if switch.data != 1:
+        break
     command_state = waypoints_ls.pop(0)
     command_driver = \
         CommandDriving(

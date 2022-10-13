@@ -22,6 +22,12 @@ if key == 'w':
     joy_msg.axes[1] = -cmd
 
 if key == 'a':
+    joy_msg.axes[0] = -cmd
+    
+if key == 's':
+    joy_msg.axes[1] = cmd
+
+if key == 'd':
     joy_msg.axes[0] = cmd
 
 if key == 'q':
