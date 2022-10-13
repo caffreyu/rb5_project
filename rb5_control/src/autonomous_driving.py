@@ -85,7 +85,7 @@ while waypoints_ls:
     c_x, c_y, c_theta = current_state
     delta_x, delta_y, delta_theta = w_x - c_x, w_y - c_y, w_theta - c_theta
 
-    print "delta_x " + str(delta_x) + " delta_y " + str(delta_y) + " delta_theta " + str(delta_theta)
+    print ("delta_x " + str(delta_x) + " delta_y " + str(delta_y) + " delta_theta " + str(delta_theta))
     
     if delta_theta == delta_y == delta_x == 0:
         rospy.loginfo("passed")
