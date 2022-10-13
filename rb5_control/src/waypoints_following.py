@@ -4,12 +4,11 @@ import rospy
 from std_msgs.msg import Int8
 
 # processing waypoints
+with open('/root/ros_ws/src/rb5_project/rb5_control/src/waypoints.txt') as f:
+    waypoints_file = f.readlines()
 
 # with open('/home/hay024/ros_ws/src/rb5_project/rb5_control/src/waypoints.txt') as f:
 #     waypoints_file = f.readlines()
-
-with open('/root/ros_ws/src/rb5_project/rb5_control/src/waypoints.txt') as f:
-    waypoints_file = f.readlines()
 
 waypoints_string_ls = [ele[: -1].split(',') for ele in waypoints_file]
 waypoints_string_ls[-1][-1] = '0'
@@ -26,6 +25,7 @@ while waypoints_ls:
     switch = rospy.wait_for_message("/switch", Int8)
     if switch.data != 1:
         break
+
     command_state = waypoints_ls.pop(0)
     command_driver = \
         CommandDriving(
