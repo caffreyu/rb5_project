@@ -8,10 +8,6 @@ from general_controller import GeneralController
 class OpenLoopController(GeneralController):
 
     def __init__(self, current_state, cmd_state, threshold = 0.05):
-        # self._current_state = current_state
-        # self._cmd_state = cmd_state
-        # self._pid = PIDcontroller(0.02, 0.005, 0.005)
-        # self._pub = rospy.Publisher("/twist", Twist, queue_size=1)
         GeneralController.__init__(
             self, 
             current_state = current_state, 
@@ -47,5 +43,4 @@ class OpenLoopController(GeneralController):
         else:
             rospy.loginfo('Open Loop Reached')
             self.reached = True
-            self.shutdown_controller(0.05)
 

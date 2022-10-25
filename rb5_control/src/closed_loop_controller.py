@@ -25,8 +25,7 @@ class ClosedLoopController(GeneralController):
         if len(data.poses) == 0:
             rospy.loginfo("Robot lost")
             desired_twist = np.array([0.0, 0.0, 0.0])
-            # TODO: figure out a reasonable value here, controls rotation speed
-            desired_twist[3] = 1 
+            desired_twist[2] = 0.02 
             twist_msg = self.genTwistMsg(desired_twist)
             self._pub.publish(twist_msg)
             return
@@ -43,20 +42,11 @@ class ClosedLoopController(GeneralController):
             ]
         )
 
-        self._current_state = np.array([curr_z, curr_x, curr_r])
+        self._current_state = np.array([-curr_z, curr_x, curr_r])
         self._pid.setTarget(self._cmd_state)
-        update_value = self._pid.update(self._current_state)
-        twist_msg = self.genTwistMsg(
-            self.coord(
-                twist = update_value, 
-                current_state = self._current_state
-                )
-        )
-        self._pub.publish(twist_msg)
-        rospy.sleep(0.05)
         
         # TODO: tune the threshold here for future implementation
-        if(np.linalg.norm(self._pid.getError(self._current_state, self._cmd_state)) > self.threshold): 
+        if np.any(self._pid.getError(self._current_state, self._cmd_state) > self.threshold): 
             update_value = self._pid.update(self._current_state)
             twist_msg = self.genTwistMsg(
                 self.coord(
@@ -69,4 +59,3 @@ class ClosedLoopController(GeneralController):
         else:
             rospy.loginfo('Closed Loop Reached')
             self.reached = True
-            self.shutdown_controller(0.05)

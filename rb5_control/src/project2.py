@@ -16,9 +16,9 @@ waypoints = np.array(
 )
 april_tag_refs = np.array(
     [
-        [0.3, 0, 0],
-        [0.5, 0, 0],
-        [0.8, 0, 0],
+        [-0.3, 0, 0],
+        [-0.5, 0, 0],
+        [-0.8, 0, 0],
     ]
 )
 current_state = np.array([0.0,0.0,0.0])
@@ -46,48 +46,24 @@ if __name__ == "__main__":
     
     while not rospy.is_shutdown():
         if not open_controller.reached:
-            print ('in open loop')
-            rospy.Subscriber('/april_poses', PoseArray, open_controller.move_cb)         
+            rospy.loginfo('In Open Loop')
+            func = open_controller.move_cb
         elif not closed_controller.reached:
-            print ('in closed loop')
-            rospy.Subscriber('/april_poses', PoseArray, closed_controller.move_cb)
+            rospy.loginfo('In Closed Loop')
+            func = closed_controller.move_cb
         else:
-            print ('reset')
-            open_controller.reached = closed_controller.reached = False
+            rospy.loginfo('Reseting Reached Flags')
             index += 1
+            if index > waypoints.shape[0]:
+                rospy.loginfo("Finished Waypoints")
+                open_controller.shutdown_controller(10)
+            open_controller.reached = closed_controller.reached = False
             waypoint = waypoints[index]
             april_tag_ref = april_tag_refs[index]
             open_controller._cmd_state = waypoint
             closed_controller._cmd_state = april_tag_ref
+        rospy.Subscriber('/april_poses', PoseArray, func, queue_size = 1)
     
         rate.sleep()
-
-    # for index in range(waypoints.shape[0]):
-    #     waypoint = waypoints[index]
-    #     april_tag_ref = april_tag_refs[index]
-    #     rospy.loginfo('Target position')
-    #     rospy.loginfo(waypoint)
-    #     rospy.loginfo('Starting open loop controller')
-    #     controller = OpenLoopController(
-    #         current_state = current_state,
-    #         cmd_state = waypoint,
-    #         threshold = 0.05,
-    #     )
-    #     controller.move()
-    #     rospy.loginfo("Shutting down open loop controller")
-    #     controller.shutdown_controller()
-
-    #     rospy.loginfo("Starting closed loop controller")
-    #     controller = ClosedLoopController(
-    #         current_state = current_state,
-    #         cmd_state = april_tag_ref,
-    #         threshold = 0.1,
-    #     )
-    #     rospy.Subscriber('/april_poses', PoseArray, controller.move_cb)
-    #     rospy.loginfo("Shutting down closed loop controller")
-    #     controller.shutdown_controller()
-    
-    # rospy.spin()
-
 
 
