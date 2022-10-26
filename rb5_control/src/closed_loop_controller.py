@@ -33,7 +33,7 @@ class ClosedLoopController(GeneralController):
         curr_pose = data.poses[0].position
         curr_quat = data.poses[0].orientation
         curr_x, curr_z = curr_pose.x, curr_pose.z
-        curr_r = euler_from_quaternion(
+        _, curr_r, _ = euler_from_quaternion(
             [
                 curr_quat.w,
                 curr_quat.x,
