@@ -84,7 +84,6 @@ def getCurrentPos(l):
     for i in range(0, 9):
         camera_name = "camera_" + str(i)
         if l.frameExists(camera_name):
-            # print ("camera_name is " + camera_name) # DEBUG
             try:
                 now = rospy.Time()
                 # wait for the transform ready from the map to the camera for 1 second.

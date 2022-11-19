@@ -111,12 +111,12 @@ class aStar():
                 update_pos = self.update_curr_pos(curr_pos, action)
                 if abs(action[0]) == abs(action[1]):
                     if self.check_map_diag(curr_pos, action):
-                        update_dist = self.cal_manhanttan_dist(update_pos, self.goal)
+                        update_dist = self.cal_euclidean_dist(update_pos, self.goal)
                         update_cost = cost + update_dist
                         heappush(self.open_set, (update_cost, (update_pos, path + [action], cost + 1)))
                 else:
                     if self.check_map(update_pos):
-                        update_dist = self.cal_manhanttan_dist(update_pos, self.goal)
+                        update_dist = self.cal_euclidean_dist(update_pos, self.goal)
                         update_cost = cost + update_dist
                         heappush(self.open_set, (update_cost, (update_pos, path + [action], cost + 1)))
             token += 1
