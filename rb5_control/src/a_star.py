@@ -100,7 +100,7 @@ class aStar():
             # Check goal
             if self.check_goal(curr_pos):
                 self.path = path
-                print ("[INFO] Found Goal")
+                print ("[INFO] A* Found Goal")
                 break
             # Check visited
             if curr_pos in self.visited:

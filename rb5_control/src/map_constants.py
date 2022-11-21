@@ -30,6 +30,7 @@ start = [2.5, 0.5]
 goal  = [0.5, 2.5]
 
 cell_size = 0.1
+robot_clearance = 0.2
 tolerance = 0
 
 
