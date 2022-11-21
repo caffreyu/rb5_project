@@ -120,6 +120,8 @@ class aStar():
                         update_cost = cost + update_dist
                         heappush(self.open_set, (update_cost, (update_pos, path + [action], cost + 1)))
             token += 1
+        
+        print ("[INFO] A* path planning algorithm running out of iterations")
 
 if __name__ == '__main__':
     map = np.zeros((6, 6))

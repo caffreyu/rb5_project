@@ -16,9 +16,9 @@ class voronoi():
         map, 
         start, 
         goal, 
-        tolerance, 
-        max_iter = 5000, 
-        verbose = False
+        tolerance,  
+        verbose = False,
+        max_iter = 5000,
     ):
         self.map = map
         self.start = start
@@ -74,9 +74,9 @@ class voronoi():
             #     print ('Found start')
             if self.check_freespace(x, y):
                 nodes.append(list(vertice))
-                
+                        
         openset, closedset = [], []
-        heappush(openset, (0, (self.start, [(0, 0)], 0)))
+        heappush(openset, (0, (self.start, [], 0)))
         token = 0
 
         while openset and token <= self.max_iter:
@@ -95,6 +95,8 @@ class voronoi():
                     heappush(openset, (update_cost, (update_pos, path + [action], cost + 1)))
                     
             token += 1
+        
+        print ('[INFO] Voronoi path planning algorithm running out of iterations')
             
 
 

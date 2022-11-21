@@ -148,7 +148,7 @@ if __name__ == '__main__':
         pk.dump(np.array(aStar_waypoints), f)
     
     # Test the Voronoi path planner
-    voro = voronoi(map, arr_start, arr_goal, tolerance)
+    voro = voronoi(map, arr_start, arr_goal, tolerance, verbose)
     voro_path = voro.plan_path()
     voro_waypoitns = generate_waypoints(deepcopy(voro_path))
 
