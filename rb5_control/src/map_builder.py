@@ -89,6 +89,7 @@ if verbose:
     plt.show()
 
 def generate_waypoints(path):
+    '''Generate waypoints file from generated path.'''
     arr_track = list(arr_start)
     prev_action = path.pop(0)
     arr_track[0] += prev_action[0]
@@ -171,4 +172,3 @@ if __name__ == '__main__':
 
         with open('voronoi_waypoints.pickle', 'wb') as f:
             pk.dump(np.array(voro_waypoitns), f)
-

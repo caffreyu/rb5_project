@@ -10,6 +10,7 @@ actions = [(0, -1), (0, 1), (-1, 0), (1, 0), \
            (-1, -1), (-1, 1), (1, -1), (1, 1)]
 
 class voronoi():
+    '''Class for voronoi path planner.'''
 
     def __init__(
         self, 
@@ -20,6 +21,7 @@ class voronoi():
         verbose = False,
         max_iter = 5000,
     ):
+        '''Initialize the voronoi class.'''
         self.map = map
         self.start = start
         self.goal = goal
@@ -29,12 +31,15 @@ class voronoi():
         self.build_voronoi()
     
     def check_obstacle(self, row, col):
+        '''Check if coordinate (row, col) is obstacle in map.'''
         return self.map[row, col] == 1
     
     def check_freespace(self, row, col):
+        '''Check if coordinate (row, col) is freespace in map.'''
         return not self.check_obstacle(row, col)
     
     def build_voronoi(self):
+        '''Build the voronoi class object.'''
         h, w = self.map.shape
         coordinates = set()
         for row in range(1, h - 1):
@@ -48,7 +53,6 @@ class voronoi():
                         coordinates.add((col - 1, row))
                     if self.check_freespace(row, col + 1):
                         coordinates.add((col + 1, row))
-        # print (coordinates)
         coordinates = np.array(list(coordinates)).reshape((-1, 2))
         self.voronoi = Voronoi(coordinates)
         if self.verbose:
@@ -58,6 +62,7 @@ class voronoi():
             plt.show()
     
     def cal_dist(self, x, y):
+        '''Calculate manhanttan distance between point_a and point_b.'''
         return max(abs(x[0] - y[0]), abs(x[1] - y[1]))
     
     def update_curr_pos(self, curr_pos, action):
@@ -65,13 +70,12 @@ class voronoi():
         return [curr_pos[0] + action[0], curr_pos[1] + action[1]]
     
     def plan_path(self):
+        '''Plan the path from start to goal.'''
         vertices = self.voronoi.vertices.astype(int)
         nodes = []
         
         for vertice in vertices:
             x, y = vertice
-            # if x == self.goal[0] and y == self.goal[1]:
-            #     print ('Found start')
             if self.check_freespace(x, y):
                 nodes.append(list(vertice))
                         
@@ -98,8 +102,3 @@ class voronoi():
         
         print ('[INFO] Voronoi path planning algorithm running out of iterations')
             
-
-
-        
-                    
-

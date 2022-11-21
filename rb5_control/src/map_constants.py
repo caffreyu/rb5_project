@@ -32,5 +32,3 @@ goal  = [2.44, 2.44]
 cell_size = 0.1
 robot_clearance = 0.2
 tolerance = 2
-
-
